@@ -95,6 +95,14 @@ class Dataset(Dataset):
         GT = np.expand_dims(GT, axis=0)
         GT = Cropping_3d(GT)
         
+        temp = np.zeros((4,128,128))
+        
+        temp[0:1,:][np.where(GT==1)] = 1
+        temp[1:2,:][np.where(GT==2)] = 1
+        temp[2:3,:][np.where(GT==3)] = 1
+        temp[3:4,:][np.where(GT==0)] = 1
+
+        
         LGE = np.float64(np.load(LGE_path,allow_pickle=True)[0][0])
         LGE = Normalization_1(LGE)
         LGE = np.expand_dims(LGE, axis=0)
@@ -110,7 +118,7 @@ class Dataset(Dataset):
         if Class=='ABSENT':   #  [ present-->0 and absent -->1]
             class_label = 1
         
-        return  CINE,GT,LGE,class_label, self.images[index][:-4]
+        return  CINE,temp,LGE,class_label, self.images[index][:-4]
     
 def Data_Loader(CINE_folder,GT_folder,LGE_folder,batch_size,num_workers=NUM_WORKERS,pin_memory=PIN_MEMORY):
     test_ids = Dataset(CINE_folder=CINE_folder,GT_folder=GT_folder,LGE_folder=LGE_folder)
@@ -124,27 +132,31 @@ LGE_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\five_fold_data\F
 
 val = Data_Loader(CINE_folder,GT_folder,LGE_folder,batch_size)
 
-# a = iter(val)
-# #a1 = next(a)
-# for i in range(1):
-#     a1 =next(a)
-#     cine = a1[0].numpy()
-#     gt = a1[1].numpy()
-#     lge = a1[2].numpy()
-#     cl_label = a1[3]
-#     name = a1[4]
+a = iter(val)
+#a1 = next(a)
+for i in range(1):
+    a1 =next(a)
+    cine = a1[0].numpy()
+    gt = a1[1].numpy()
+    lge = a1[2].numpy()
+    cl_label = a1[3]
+    name = a1[4]
     
 #     # plt.imsave(os.path.join(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\VIZ\gts/',name[0]+".png"),gt[0,0,:])
 
 
-# plt.figure()
-# plt.imshow(cine[0,10,:])
+plt.figure()
+plt.imshow(cine[0,10,:])
 
-# plt.figure()
-# plt.imshow(gt[0,0,:])
+for i in range(4):
+    plt.figure()
+    plt.imshow(gt[0,i,:])
 
-# plt.figure()
-# plt.imshow(lge[0,0,:])
+plt.figure()
+plt.imshow(lge[0,0,:])
+
+plt.figure()
+plt.imshow(a1[5][0,0,:])
 
 
 # # gt = np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\GTS\ABSENT_CON-AA166_ (85)_series1003_seg_data.npy',allow_pickle=True)
