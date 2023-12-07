@@ -101,7 +101,10 @@ class Dataset(Dataset):
         LGE = Cropping_3d(LGE)
         
         Class = self.images[index][:-40]
-        print(Class)
+        
+        print(GT_path)
+        print(CINE_path)
+        print(LGE_path)
         
         class_label = 0
         if Class=='ABSENT':   #  [ present-->0 and absent -->1]
@@ -114,24 +117,24 @@ def Data_Loader(CINE_folder,GT_folder,LGE_folder,batch_size,num_workers=NUM_WORK
     data_loader = DataLoader(test_ids,batch_size=batch_size,num_workers=num_workers,pin_memory=pin_memory,shuffle=True)
     return data_loader
 
-batch_size = 10
-CINE_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\CINE'
-GT_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\GTS'
-LGE_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\LGE'
+batch_size = 1
+CINE_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\five_fold_data\F1\val\CINE'
+GT_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\five_fold_data\F1\val\GTS'
+LGE_folder = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\five_fold_data\F1\val\LGE'
 
 val = Data_Loader(CINE_folder,GT_folder,LGE_folder,batch_size)
 
-a = iter(val)
-a1 = next(a)
-# for i in range(5):
+# a = iter(val)
+# #a1 = next(a)
+# for i in range(1):
 #     a1 =next(a)
-    # cine = a1[0]
-    # gt = a1[1]
-    # lge = a1[2]
-    # cl_label = a1[3]
-    # name = a1[4]
+#     cine = a1[0].numpy()
+#     gt = a1[1].numpy()
+#     lge = a1[2].numpy()
+#     cl_label = a1[3]
+#     name = a1[4]
     
-    # plt.imsave(os.path.join(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\VIZ\gts/',name[0]+".png"),gt[0,0,:])
+#     # plt.imsave(os.path.join(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\VIZ\gts/',name[0]+".png"),gt[0,0,:])
 
 
 # plt.figure()
@@ -144,12 +147,36 @@ a1 = next(a)
 # plt.imshow(lge[0,0,:])
 
 
-# gt = np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\GTS\ABSENT_CON-AA166_ (85)_series1003_seg_data.npy',allow_pickle=True)
-# cine = np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\CINE\ABSENT_CON-AA166_ (85)_series1003_pixel_array_data.npy',allow_pickle=True)[0]
-# cine = list(cine.values())
-# cine = np.array(cine)
-# c= cine[10]
-# b = np.float64(np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\LGE\ABSENT_CON-AA166_ (85)_series1003_reg_lge_pixel_data.npy',allow_pickle=True)[0][0])
+# # gt = np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\GTS\ABSENT_CON-AA166_ (85)_series1003_seg_data.npy',allow_pickle=True)
+# # cine = np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\CINE\ABSENT_CON-AA166_ (85)_series1003_pixel_array_data.npy',allow_pickle=True)[0]
+# # cine = list(cine.values())
+# # cine = np.array(cine)
+# # c= cine[10]
+# # b = np.float64(np.load(r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\LGE\ABSENT_CON-AA166_ (85)_series1003_reg_lge_pixel_data.npy',allow_pickle=True)[0][0])
+# # cl_label = a1[3].numpy()
+# # name = a1[4]
 
-cl_label = a1[3].numpy()
-name = a1[4]
+# import torch
+# import kornia
+# three =np.zeros(gt.shape)
+# three[np.where(gt!=0)] = 1
+# three = np.concatenate((three,)*3, axis=1)
+
+# three =torch.tensor(three)
+# magnitude, edges=kornia.filters.canny(three, low_threshold=0.1, high_threshold=0.2, kernel_size=(7, 7), sigma=(1, 1), hysteresis=True, eps=1e-06)
+
+# edges = edges[0,0,:].numpy()
+
+# def normalize(x):
+#     return np.array((x - np.min(x)) / (np.max(x) - np.min(x)))
+
+# lge = normalize(lge)
+# lge = np.stack((lge,)*3, axis=2)
+
+# lge = lge[0,0,0,:]
+# lge[np.where(edges[:,:]!=0)] = 1
+
+# import matplotlib.pyplot as plt
+
+# plt.figure()
+# plt.imshow(lge)
