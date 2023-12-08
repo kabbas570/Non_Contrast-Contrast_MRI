@@ -1,5 +1,5 @@
 
-folder_path = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\before'
+folder_path = r'C:\My_Data\Barts_Data\data\Data_Class_MI\my_data\before\training\ABSENT_CON-AA166_ (3)_series1002'
 
 import os
 import shutil
@@ -7,16 +7,16 @@ import shutil
 # Path to the folder containing .npy files
 
 # List all .npy files in the folder
-file_list = [file for file in os.listdir(folder_path) if file.endswith('.npy')]
+file_list = [file for file in os.listdir(folder_path) if file.endswith('.nrrd')]
 
 # Dictionary to store image and ground truth pairs by their common identifier
 file_pairs = {}
 
 # Identify common identifier in filenames and pair image and ground truth files
 for file in file_list:
-    if '_seg_data.npy' in file:
-        identifier = file.split('_seg_data.npy')[0]  # Assuming '_series' identifies the identifier
-        img_file = file.replace('_seg_data.npy', '_reg_lge_pixel_data.npy')  # Generating image filename
+    if '_seg_data.nrrd' in file:
+        identifier = file.split('_seg_data.nrrd')[0]  # Assuming '_series' identifies the identifier
+        img_file = file.replace('_seg_data.nrrd', '_reg_lge_pixel_data.nrrd')  # Generating image filename
         
         if img_file in file_list:
             if identifier not in file_pairs:
@@ -41,10 +41,13 @@ for identifier, files in file_pairs.items():
         for file in [img_file, gt_file]:
             src_path = os.path.join(folder_path, file)
             dst_path = os.path.join(folder_path_new, file)
-            # Add '_gt' to the ground truth filename
+
             if gt_file in file:
-                dst_path = dst_path.replace('.npy', '_gt.npy')
+                dst_path = dst_path.replace('_seg_data.nrrd', '_gt.nrrd')
+                
+            if img_file in file:
+                dst_path = dst_path.replace('_reg_lge_pixel_data.nrrd', '.nrrd')
+                    
             shutil.move(src_path, dst_path)
             print(f"Moved {file} to {folder_name}.")
-
 
